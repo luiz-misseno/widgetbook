@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 import 'package:resizable_widget/resizable_widget.dart';
 
 import '../settings/settings.dart';
 import '../state/state.dart';
 import '../widgetbook_theme.dart';
 import 'base_layout.dart';
-import 'examples_panel_data.dart';
 
+/// The [DesktopLayout] is a layout for desktop devices that allows
+/// displaying the navigation, addons, knobs, and workbench in a
+/// resizable layout.
+@internal
 class DesktopLayout extends StatelessWidget implements BaseLayout {
   const DesktopLayout({
     super.key,
@@ -31,12 +35,12 @@ class DesktopLayout extends StatelessWidget implements BaseLayout {
     const kWorkbenchPercentage = 1 - 2 * kSidePanelPercentage;
 
     final showNavigationPanel = state.canShowPanel(LayoutPanel.navigation);
-    final showAddonsPanel = state.canShowPanel(LayoutPanel.addons) &&
-        state.addons != null &&
-        state.addons!.isNotEmpty;
+    final showSettingsPanel =
+        state.canShowPanel(LayoutPanel.addons) ||
+        state.canShowPanel(LayoutPanel.knobs);
 
     return ColoredBox(
-      key: ValueKey(state.isNext),
+      key: ValueKey(state.isNext), // Rebuild when switching to next
       color: WidgetbookTheme.of(context).colorScheme.surface,
       child: ResizableLayout(
         items: [
@@ -44,7 +48,6 @@ class DesktopLayout extends StatelessWidget implements BaseLayout {
             ResizableLayoutItem(
               percentage: kSidePanelPercentage,
               child: Card(
-                key: ValueKey(state.isNext),
                 child: navigationBuilder(context),
               ),
             ),
@@ -52,61 +55,43 @@ class DesktopLayout extends StatelessWidget implements BaseLayout {
             percentage: kWorkbenchPercentage,
             child: workbench,
           ),
-          ResizableLayoutItem(
-            percentage: kSidePanelPercentage,
-            child: Builder(
-              builder: (context) {
-                final state = WidgetbookState.of(context);
-                
-                final canShowKnobs = state.canShowPanel(LayoutPanel.knobs) &&
-                    state.knobs.isNotEmpty;
-
-                final canShowSidePanel = canShowKnobs || showAddonsPanel;
-
-                return Card(
-                  child: SettingsPanel(
-                    settings: canShowSidePanel
-                        ? [
-                            if (state.isNext) ...{
-                              SettingsPanelData(
-                                name: 'Args',
-                                builder: argsBuilder,
-                              ),
-                            } else if (canShowKnobs) ...{
-                              SettingsPanelData(
-                                name: 'Knobs',
-                                builder: knobsBuilder,
-                              ),
-                            },
-                            if (showAddonsPanel) ...{
-                              SettingsPanelData(
-                                name: 'Addons',
-                                builder: addonsBuilder,
-                              ),
-                            },
-                          ]
-                        : [
-                            SettingsPanelData(
-                              name: 'Utils',
-                              builder: (context) => [
-                                ExamplesPanelData(
-                                  designLink: state.useCase?.designLink,
-                                  documentationLink: state.useCase?.docsLink,
-                                ),
-                              ],
-                            ),
-                          ],
-                  ),
-                );
-              },
+          if (showSettingsPanel)
+            ResizableLayoutItem(
+              percentage: kSidePanelPercentage,
+              child: Card(
+                child: SettingsPanel(
+                  settings: [
+                    if (state.canShowPanel(LayoutPanel.knobs)) ...{
+                      if (state.isNext) ...{
+                        SettingsPanelData(
+                          name: 'Args',
+                          builder: argsBuilder,
+                        ),
+                      } else ...{
+                        SettingsPanelData(
+                          name: 'Knobs',
+                          builder: knobsBuilder,
+                        ),
+                      },
+                    },
+                    if (state.canShowPanel(LayoutPanel.addons) &&
+                        state.addons != null) ...{
+                      SettingsPanelData(
+                        name: 'Addons',
+                        builder: addonsBuilder,
+                      ),
+                    },
+                  ],
+                ),
+              ),
             ),
-          ),
         ],
       ),
     );
   }
 }
 
+@internal
 class ResizableLayoutItem {
   const ResizableLayoutItem({
     required this.percentage,
@@ -120,6 +105,7 @@ class ResizableLayoutItem {
 /// An improved API for [ResizableWidget] that allows passing both percentage
 /// and child in a single object, allowing to easily add or remove items.
 /// Also distributes the remaining space equally among all items.
+@internal
 class ResizableLayout extends StatelessWidget {
   const ResizableLayout({super.key, required this.items});
 
