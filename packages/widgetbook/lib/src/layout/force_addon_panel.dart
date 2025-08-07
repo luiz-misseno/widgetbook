@@ -27,6 +27,9 @@ class _ForceAddonPanelState extends State<ForceAddonPanel> {
   void dispose() {
     super.dispose();
     widget.state.forceSidePanel = false;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.state.notifyListeners();
+    });
   }
 
   @override
