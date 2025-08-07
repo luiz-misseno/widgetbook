@@ -68,6 +68,7 @@ class WidgetbookState extends ChangeNotifier {
   final List<WidgetbookIntegration>? integrations;
   final WidgetbookRoot root;
   final Widget home;
+  bool forceSidePanel = false;
 
   /// An optional widget to display at the top of the navigation panel.
   /// This can be used for branding or additional information.
