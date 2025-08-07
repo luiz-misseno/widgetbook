@@ -17,6 +17,7 @@ export 'src/knobs/knobs.dart'
         IntSliderKnob,
         ListKnob,
         StringKnob;
+export 'src/layout/force_addon_panel.dart';
 export 'src/navigation/nodes/nodes.dart';
 export 'src/state/state.dart';
 export 'src/widgetbook.dart';
