@@ -84,15 +84,16 @@ class DesktopLayout extends StatelessWidget implements BaseLayout {
                             },
                           ]
                         : [
-                            SettingsPanelData(
-                              name: 'Utils',
-                              builder: (context) => [
-                                ExamplesPanelData(
-                                  designLink: state.useCase?.designLink,
-                                  documentationLink: state.useCase?.docsLink,
-                                ),
-                              ],
-                            ),
+                            if (state.useCase != null)
+                              SettingsPanelData(
+                                name: 'Utils',
+                                builder: (context) => [
+                                  ExamplesPanelData(
+                                    designLink: state.useCase?.designLink,
+                                    documentationLink: state.useCase?.docsLink,
+                                  ),
+                                ],
+                              ),
                           ],
                   ),
                 );
