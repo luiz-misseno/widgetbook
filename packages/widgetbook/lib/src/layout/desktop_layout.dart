@@ -35,6 +35,13 @@ class DesktopLayout extends StatelessWidget implements BaseLayout {
         state.addons != null &&
         state.addons!.isNotEmpty;
 
+    final showKnobsPanel =
+        state.canShowPanel(LayoutPanel.knobs) && state.knobs.isNotEmpty;
+    final showToolsPanel = state.forceSidePanel || showKnobsPanel;
+
+    final showPanel = showToolsPanel &&
+        (state.isNext || showKnobsPanel || showAddonsPanel || state.useCase != null);
+
     return ColoredBox(
       key: ValueKey(state.isNext),
       color: WidgetbookTheme.of(context).colorScheme.surface,
@@ -52,54 +59,50 @@ class DesktopLayout extends StatelessWidget implements BaseLayout {
             percentage: kWorkbenchPercentage,
             child: workbench,
           ),
-          ResizableLayoutItem(
-            percentage: kSidePanelPercentage,
-            child: Builder(
-              builder: (context) {
-                final state = WidgetbookState.of(context);
-                final showKnobsPanel = state.canShowPanel(LayoutPanel.knobs) &&
-                    state.knobs.isNotEmpty;
-                final showToolsPAnel = state.forceSidePanel || showKnobsPanel;
-
-                return Card(
-                  child: SettingsPanel(
-                    settings: showToolsPAnel
-                        ? [
-                            if (state.isNext) ...{
-                              SettingsPanelData(
-                                name: 'Args',
-                                builder: argsBuilder,
-                              ),
-                            } else if (showKnobsPanel)...{
-                              SettingsPanelData(
-                                name: 'Knobs',
-                                builder: knobsBuilder,
-                              ),
-                            },
-                            if (showAddonsPanel) ...{
-                              SettingsPanelData(
-                                name: 'Addons',
-                                builder: addonsBuilder,
-                              ),
-                            },
-                          ]
-                        : [
-                            if (state.useCase != null)
-                              SettingsPanelData(
-                                name: 'Utils',
-                                builder: (context) => [
-                                  ExamplesPanelData(
-                                    designLink: state.useCase?.designLink,
-                                    documentationLink: state.useCase?.docsLink,
-                                  ),
-                                ],
-                              ),
-                          ],
-                  ),
-                );
-              },
+          if (showPanel)
+            ResizableLayoutItem(
+              percentage: kSidePanelPercentage,
+              child: Builder(
+                builder: (context) {
+                  return Card(
+                    child: SettingsPanel(
+                      settings: showToolsPanel
+                          ? [
+                              if (state.isNext) ...{
+                                SettingsPanelData(
+                                  name: 'Args',
+                                  builder: argsBuilder,
+                                ),
+                              } else if (showKnobsPanel) ...{
+                                SettingsPanelData(
+                                  name: 'Knobs',
+                                  builder: knobsBuilder,
+                                ),
+                              },
+                              if (showAddonsPanel) ...{
+                                SettingsPanelData(
+                                  name: 'Addons',
+                                  builder: addonsBuilder,
+                                ),
+                              },
+                            ]
+                          : [
+                              if (state.useCase != null)
+                                SettingsPanelData(
+                                  name: 'Utils',
+                                  builder: (context) => [
+                                    ExamplesPanelData(
+                                      designLink: state.useCase?.designLink,
+                                      documentationLink: state.useCase?.docsLink,
+                                    ),
+                                  ],
+                                ),
+                            ],
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
         ],
       ),
     );
