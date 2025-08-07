@@ -22,4 +22,6 @@ extension KnobsExtension on BuildContext {
 
     return KnobsBuilder(register);
   }
+
+  void showSidePanel() => WidgetbookState.of(this).setForceSidePanel();
 }
