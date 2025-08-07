@@ -133,11 +133,6 @@ class WidgetbookState extends ChangeNotifier {
     );
   }
 
-  void setForceSidePanel() {
-    forceSidePanel = true;
-    notifyListeners();
-  }
-
   bool canShowPanel(LayoutPanel panel) {
     if (previewMode) return false;
     if (panels == null) return true;
