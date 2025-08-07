@@ -17,19 +17,25 @@ class ForceAddonPanel extends StatefulWidget {
 }
 
 class _ForceAddonPanelState extends State<ForceAddonPanel> {
+  String? _pagePath;
+
   @override
   void initState() {
     super.initState();
     widget.state.forceSidePanel = true;
+    _pagePath = widget.state.uri.queryParameters['path'];
   }
 
   @override
   void dispose() {
+    final pagePath = _pagePath;
+    if (pagePath != null && pagePath != widget.state.uri.queryParameters['path']) {
+      widget.state.forceSidePanel = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.state.notifyListeners();
+      });
+    }
     super.dispose();
-    widget.state.forceSidePanel = false;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.state.notifyListeners();
-    });
   }
 
   @override
