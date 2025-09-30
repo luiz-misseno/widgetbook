@@ -5,3 +5,6 @@ environment:
 
 dev_dependencies:
   melos: ^6.0.0
+
+dependency_overrides:
+  meta: 1.17.0
