@@ -18,5 +18,5 @@
       "scheme": "file"
     }
   ],
-  "dart.flutterSdkPath": ".fvm/versions/3.27.1"
+  "dart.flutterSdkPath": ".fvm/versions/3.35.3"
 }
