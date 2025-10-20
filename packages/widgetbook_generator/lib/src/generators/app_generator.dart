@@ -28,8 +28,10 @@ class AppGenerator extends GeneratorForAnnotation<App> {
   ) async {
     // The directory containing the `widgetbook.dart` file
     // without the leading `/`
-    final inputPath = element.librarySource!.fullName;
-    final inputDir = path.dirname(inputPath).substring(1);
+    final inputPath = element.library?.uri.toString() ?? '';
+    final inputDir = inputPath.startsWith('package:') 
+        ? 'packages/${inputPath.split('/')[1]}' 
+        : path.dirname(inputPath).substring(1);
 
     final emitter = DartEmitter(
       allocator: ResolverAllocator(inputDir),

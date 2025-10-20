@@ -97,8 +97,12 @@ class UseCaseGenerator extends GeneratorForAnnotation<UseCase> {
   /// Resolves the URI of an [element] by retrieving the URI from
   /// the [element]'s source.
   String resolveElementUri(Element element) {
-    final source = element.librarySource ?? element.source!;
-    return source.uri.toString();
+    if (element is LibraryElement) {
+      return element.uri.toString();
+    }
+
+    return element.library?.uri.toString() ??
+        (throw StateError('Cannot resolve URI for element ${element.name}'));
   }
 
   KnobsConfigs _parseKnobsConfigs(

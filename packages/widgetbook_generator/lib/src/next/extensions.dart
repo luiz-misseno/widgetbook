@@ -12,7 +12,7 @@ extension ExpressionX on Expression {
   }
 }
 
-extension ParameterElementX on ParameterElement {
+extension ParameterElementX on FormalParameterElement {
   bool get requiresArg {
     return !type.isPrimitive && !type.isNullable && !hasDefaultValue;
   }
@@ -93,7 +93,7 @@ extension DartTypeX on DartType {
         ? TypeMeta(
             'EnumArg<$nonNullableName>',
             refer(nonNullableName).property(
-              (element as EnumElement).fields.first.name,
+              (element as EnumElement).fields.first.name ?? '',
             ),
           )
         : typesMeta[nonNullableName]!;

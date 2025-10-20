@@ -17,7 +17,7 @@ class StoryGenerator extends Generator {
   ) async {
     final storiesVariables = library.allElements
         .whereType<TopLevelVariableElement>()
-        .where((element) => element.name.startsWith('\$'))
+        .where((element) => element.name?.startsWith('\$') ?? false)
         .toList();
 
     final metaVariable = library.allElements

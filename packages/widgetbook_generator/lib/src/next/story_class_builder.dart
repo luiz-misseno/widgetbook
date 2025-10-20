@@ -14,8 +14,12 @@ class StoryClassBuilder {
   final DartType widgetType;
   final DartType argsType;
 
-  Iterable<ParameterElement> get params {
-    return (argsType.element as ClassElement).constructors.first.parameters;
+  Iterable<FormalParameterElement> get params {
+    return (argsType.element as ClassElement)
+        .constructors
+        .first
+        .formalParameters
+        .where((param) => param.name != null);
   }
 
   Class build() {
@@ -96,7 +100,7 @@ class StoryClassBuilder {
                         ])
                         ..body = instantiate(
                           (param) => refer('args') //
-                              .property(param.name)
+                              .property(param.name!)
                               .maybeProperty(
                                 'resolve',
                                 nullSafe: param.type.isNullable,
@@ -122,7 +126,7 @@ class StoryClassBuilder {
   }
 
   InvokeExpression instantiate(
-    Expression Function(ParameterElement) assigner,
+    Expression Function(FormalParameterElement) assigner,
   ) {
     return InvokeExpression.newOf(
       refer(widgetType.nonNullableName),
@@ -132,10 +136,10 @@ class StoryClassBuilder {
           .toList(),
       params //
           .where((param) => param.isNamed)
-          .lastBy((param) => param.name)
+          .lastBy((param) => param.name!)
           .map(
             (_, param) => MapEntry(
-              param.name,
+              param.name!,
               assigner(param),
             ),
           ),
