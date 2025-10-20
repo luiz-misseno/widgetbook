@@ -1,4 +1,3 @@
-import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
@@ -30,7 +29,7 @@ class BuilderGenerator extends Generator {
 
     // Process each use case
     for (final element in useCases) {
-      final LibraryFragment fragment = element.library.fragments.first;
+      final fragment = element.library.fragments.first;
       final source = fragment.source;
       final sourceCode = source.contents.data;
       final annotationOffset = fragment.nameOffset;
