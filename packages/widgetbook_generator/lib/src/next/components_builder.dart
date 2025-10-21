@@ -35,7 +35,8 @@ class ComponentsBuilder implements Builder {
         .map(
           (library) => library.allElements
               .whereType<TopLevelVariableElement>()
-              .firstWhere((element) => element.name.endsWith('Component')),
+              .firstWhere(
+                  (element) => element.name?.endsWith('Component') ?? false),
         )
         .toList();
 
@@ -44,8 +45,8 @@ class ComponentsBuilder implements Builder {
       components
           .map(
             (e) => refer(
-              e.name,
-              e.librarySource?.uri.toString().replaceAll('.book.dart', '.dart'),
+              e.name ?? '',
+              e.library.uri.toString().replaceAll('.book.dart', '.dart'),
             ),
           )
           .toList(),

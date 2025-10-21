@@ -6,13 +6,15 @@ import 'extensions.dart';
 class ArgBuilder {
   ArgBuilder(this.param);
 
-  final ParameterElement param;
+  final FormalParameterElement param;
+
+  String get name => param.name ?? '';
 
   Field buildField() {
     return Field(
       (b) => b
         ..modifier = FieldModifier.final$
-        ..name = param.name
+        ..name = name
         ..type = TypeReference(
           (b) => b
             ..symbol = 'Arg'
@@ -26,7 +28,7 @@ class ArgBuilder {
     return Parameter(
       (b) => b
         ..named = true
-        ..name = param.name
+        ..name = name
         ..type = TypeReference(
           (b) => b
             ..symbol = 'Arg'
@@ -60,7 +62,7 @@ class ArgBuilder {
     return Parameter(
       (b) => b
         ..named = true
-        ..name = param.name
+        ..name = name
         ..type = TypeReference(
           (b) => b
             ..symbol = param.type.nonNullableName

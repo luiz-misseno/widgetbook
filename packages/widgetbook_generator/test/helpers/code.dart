@@ -4,7 +4,9 @@ import 'package:test/test.dart';
 
 /// Formats output with dart formatter.
 void useDartFormatter() {
-  final _formatter = DartFormatter();
+  final _formatter = DartFormatter(
+    languageVersion: DartFormatter.latestLanguageVersion,
+  );
 
   EqualsDart.format = (source) {
     try {
@@ -22,8 +24,5 @@ Code wrapInStatement(Expression expression) {
 
 void expectExpression(Expression actual, String expected) {
   useDartFormatter();
-  expect(
-    wrapInStatement(actual),
-    equalsDart('final test = $expected;'),
-  );
+  expect(wrapInStatement(actual), equalsDart('final test = $expected;'));
 }

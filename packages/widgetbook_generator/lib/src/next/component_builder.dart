@@ -8,8 +8,8 @@ class ComponentBuilder {
   ComponentBuilder(
     this.widgetType,
     this.argsType,
-    this.stories,
-  );
+    List<TopLevelVariableElement> stories,
+  ) : stories = stories.where((story) => story.name != null).toList();
 
   final DartType widgetType;
   final DartType argsType;
@@ -31,10 +31,10 @@ class ComponentBuilder {
             {
               'meta': refer('meta'),
               if (stories.length == 1)
-                'story': refer(stories.first.name)
+                'story': refer(stories.first.name!)
               else
                 'stories': literalList(
-                  stories.map((story) => refer(story.name)).toList(),
+                  stories.map((story) => refer(story.name!)).toList(),
                 ),
             },
           ),
