@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui' show CheckedState;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
@@ -189,13 +190,14 @@ class _SemanticsDebuggerPainter extends CustomPainter {
     final annotations = <String>[];
 
     var wantsTap = false;
-    if (data.hasFlag(SemanticsFlag.hasCheckedState)) {
+    final flags = data.flagsCollection;
+    if (flags.isChecked != CheckedState.none) {
       annotations.add(
-        data.hasFlag(SemanticsFlag.isChecked) ? 'checked' : 'unchecked',
+        flags.isChecked == CheckedState.isTrue ? 'checked' : 'unchecked',
       );
       wantsTap = true;
     }
-    if (data.hasFlag(SemanticsFlag.isTextField)) {
+    if (flags.isTextField) {
       annotations.add('textfield');
       wantsTap = true;
     }
