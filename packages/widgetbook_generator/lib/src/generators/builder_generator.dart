@@ -11,7 +11,7 @@ class BuilderGenerator extends Generator {
 
     // Collect all use cases in the library
     for (final element in library.annotatedWith(
-      const TypeChecker.fromRuntime(UseCase),
+      const TypeChecker.typeNamed(UseCase, inPackage: 'widgetbook_annotation'),
     )) {
       if (element.element is ExecutableElement) {
         final function = element.element as ExecutableElement;
