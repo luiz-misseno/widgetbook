@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:meta/meta.dart';
 
 import '../viewport_data.dart';
 import 'android_viewports.dart';

@@ -1,7 +1,6 @@
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:meta/meta.dart';
 
 import 'knob.dart';
 
